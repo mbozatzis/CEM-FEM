@@ -45,8 +45,6 @@ nodes = np.column_stack((triang.x, triang.y))
 unique_nodes = np.unique(nodes, axis=0)
 element_nodes = triang.triangles
 
-#plt.triplot(triang)
-#plt.show()
 
 # Define known and unknown potentials
 node_id = np.ones(nodes.shape[0])
@@ -75,7 +73,6 @@ for inode in range(0, nodes.shape[0]):
 Nf = counter
 Sff = sp.lil_matrix((Nf, Nf), dtype = float)
 B = np.zeros(Nf)
-
 
 for ie in range(0, triang.triangles.shape[0]):
     t_c = tri_coords[ie]
@@ -113,24 +110,11 @@ for inode in range(0, nodes.shape[0]):
         Potentials[inode] = pot[un_index[inode]]
 
 
-# Find the Electric Field
-#E = - np.gradient(Potentials, 2)
-#E = np.zeros((triang.triangles.shape[0], 2))
-#for ie in range(1, triang.triangles.shape[0]):
-#    t_c = tri_coords[ie]
-#    x = [t_c[0][0], t_c[1][0], t_c[2][0]]
-#    y = [t_c[0][1], t_c[1][1], t_c[2][1]]
-#    n = [element_nodes[ie][0], element_nodes[ie][1], element_nodes[ie][2]]
-
-# Plot the results
+ #Plot the results
 fig, ax = plt.subplots(1)
 ax.triplot(triang)
 cax = ax.tripcolor(triang, Potentials, cmap='plasma', shading='flat')
 fig.colorbar(cax, ax=ax)
 ax.set_xlabel('x')
 ax.set_ylabel('y')
-
-#quiver = ax2.quiver(X_n, Y_n, E, scale=10, alpha=0.8)
-#cbar = plt.colorbar(quiver)
-
 plt.show()
