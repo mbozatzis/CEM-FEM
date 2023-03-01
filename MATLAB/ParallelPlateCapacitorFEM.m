@@ -29,6 +29,7 @@ dl = decsg(gd, sf, ns);
 [p, e, t] = initmesh(dl);
 [p, e, t] = refinemesh(dl, p, e, t);
 [p, e, t] = refinemesh(dl, p, e, t);
+[p, e, t] = refinemesh(dl, p, e, t);
 Num_nodes = size(p, 2);
 Num_elements = size(t, 2);
 
@@ -94,7 +95,13 @@ for ie = 1:Num_elements
 
     for i = 1:3
         for j = 1:3
-            Se(i, j) = (b(i)*b(j) + c(i)*c(j))*Ae;
+            flag(1) = (x(i) >= -w/2 && x(i) <= w/2) && (y(i) >= -d/2 && y(i) <= d/2);
+            flag(2) = (x(j) >= -w/2 && x(j) <= w/2) && (y(j) >= -d/2 && y(j) <= d/2);
+            if(flag(1) && flag(2))
+                Se(i,j) = er*(b(i)*b(j) + c(i)*c(j))*Ae;
+            else
+                Se(i, j) = (b(i)*b(j) + c(i)*c(j))*Ae;
+            end
 
             if (node_id(nodes(i)) == 1)
                 if (node_id(nodes(j)) == 1)
@@ -124,7 +131,7 @@ Ey = -Ey;
 
 % Plot the Results
 figure(1);
-pdeplot(p, e, t, 'xydata', Potentials);
+pdeplot(p, e, t, 'xydata', Potentials, 'contour', 'on');
 axis tight;
 axis equal;
 hold on;
