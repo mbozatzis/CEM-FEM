@@ -13,10 +13,6 @@ dl = decsg(gd, 'R1-R2', ns);
 % Create Mesh
 [p, e, t] = initmesh(dl);
 [p, e, t] = refinemesh(dl, p, e, t);
-figure(1);
-pdeplot(p, e, t);
-axis tight;
-axis equal;
 Num_nodes = size(p, 2);
 Num_elements = size(t, 2);
 
@@ -96,16 +92,25 @@ for ie = 1:Num_elements
     end
 end
 
-% Unknown Potential Calculation and plot
+% Unknown Potential Calculation 
 pot = Sff\B;
 for in = 1:Num_nodes
     if node_id(in) == 1
         Potentials(in) = pot(non_pot_index(in));
     end
 end
-figure(2);
-pdeplot(p, e, t, 'xydata', Potentials, 'mesh', 'on');
+
+% Calculate Electric Field
+[Ex, Ey] = pdegrad(p, t, Potentials);
+Ex = -Ex;
+Ey = -Ey;
+
+% Plot the Results
+figure(1);
+pdeplot(p, e, t, 'xydata', Potentials);
 axis tight;
 axis equal;
 hold on;
+pdeplot(p, e, t, 'FlowData', [Ex', Ey']');
 colormap jet;
+
