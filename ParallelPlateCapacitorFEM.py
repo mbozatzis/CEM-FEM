@@ -93,7 +93,12 @@ for ie in range(0, triang.triangles.shape[0]):
     Se = np.zeros([3, 3])
     for i in range(0, 3):
         for j in range(0, 3):
-            Se[i][j] = er*(b[i]*b[j] + c[i]*c[j])*Ae
+            flag[1] = (x[i] >= -w/2 and x[i] <= w/2) and (y[i] >= -d/2 and y[i] <= d/2 )
+            flag[2] = (x[j] >= -w/2 and x[j] <= w/2) and (y[j] >= -d/2 and y[j] <= d/2 )
+            if flag[1] and flag[2]:
+                Se[i][j] = er*(b[i]*b[j] + c[i]*c[j])*Ae
+            else:
+                Se[i][j] = (b[i]*b[j] + c[i]*c[j])*Ae
 
             if node_id[n[i]] == 1:
                 if node_id[n[j]] == 1:
