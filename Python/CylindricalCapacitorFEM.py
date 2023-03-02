@@ -108,13 +108,25 @@ for inode in range(0, nodes.shape[0]):
         Potentials[inode] = pot[un_index[inode]]
 
 
+# Electric Field Calculation
+interpolator = mtri.LinearTriInterpolator(triang, Potentials)
+[Ex, Ey] = interpolator.gradient(triang.x, triang.y)
+
 # Plot the results
-fig, ax = plt.subplots()
-ax.triplot(triang)
-cax = ax.tripcolor(triang, Potentials, cmap='plasma', shading='flat')
-fig.colorbar(cax, ax=ax)
-ax.set_xlabel('x')
-ax.set_ylabel('y')
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4))
+ax1.triplot(triang)
+cax = ax1.tripcolor(triang, Potentials, cmap='plasma', shading='flat')
+fig.colorbar(cax, ax=ax1)
+ax1.set_xlabel('x')
+ax1.set_ylabel('y')
+
+x_flat = triang.x.flatten()
+y_flat = triang.y.flatten()
+Ex_flat = -Ex.flatten()
+Ey_flat = -Ey.flatten()
+skip = (slice(None, None, 10))
+ax2.quiver(x_flat[skip], y_flat[skip], Ex_flat[skip], Ey_flat[skip])
+
 plt.show()
 
 

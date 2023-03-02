@@ -115,6 +115,11 @@ for inode in range(0, nodes.shape[0]):
         Potentials[inode] = pot[un_index[inode]]
 
 
+# Electric Field Calculation
+interpolator = mtri.LinearTriInterpolator(triang, Potentials)
+[Ex, Ey] = interpolator.gradient(triang.x, triang.y)
+
+
  #Plot the results
 fig, ax = plt.subplots(1)
 ax.triplot(triang)
@@ -123,3 +128,4 @@ fig.colorbar(cax, ax=ax)
 ax.set_xlabel('x')
 ax.set_ylabel('y')
 plt.show()
+
