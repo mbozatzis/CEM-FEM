@@ -26,10 +26,29 @@ unique_nodes = np.unique(nodes, axis=0)
 element_nodes = triang.triangles
 Nn = nodes.shape[0]
 
+# Define known and unknown fields
+node_id = np.ones(nodes.shape[0])
+Ez = np.zeros(nodes.shape[0])
+for inode in range(0, nodes.shape[0]):
+    radius = np.sqrt(pow(nodes[inode][0],2) + pow(nodes[inode][1], 2))
+    if abs(radius-a) <= pow(10,-6):
+        node_id[inode] = 0
+        Ez[inode] = 0
+
+
+# Index of unkowns
+un_index = np.zeros(nodes.size, dtype=int)
+counter = 0
+for inode in range(0, nodes.shape[0]):
+    if node_id[inode] == 1:
+        un_index[inode] = counter
+        counter = counter + 1
+
 
 # Matrix Calculation
-S = sp.lil_matrix((Nn, Nn), dtype = float)
-T = sp.lil_matrix((Nn, Nn), dtype = float)
+Nf = counter
+S = sp.lil_matrix((Nf, Nf), dtype = float)
+T = sp.lil_matrix((Nf, Nf), dtype = float)
 
 
 for ie in range(1, triang.triangles.shape[0]):
@@ -57,14 +76,18 @@ for ie in range(1, triang.triangles.shape[0]):
                 Te[i][j] = Ae/6
             else:
                 Te[i][j] = Ae/12
-            S[n[i], n[j]] = S[n[i], n[j]] + Se[i][j]
-            T[n[i], n[j]] = T[n[i], n[j]] + Te[i][j]
+
+            if node_id[n[i]] == 1:
+                if node_id[n[j]] == 1:
+                    S[un_index[n[i]], un_index[n[j]]] = S[un_index[n[i]], un_index[n[j]]] + Se[i][j]
+                    T[un_index[n[i]], un_index[n[j]]] = T[un_index[n[i]], un_index[n[j]]] + Te[i][j]
+
 
 
 # Field and cut-off frequency calculation
 k = 6
 sigma = 0.1
-M = sp.eye(Nn)
+M = sp.eye(Nf)
 vals, vecs = sp.linalg.eigs(S - sigma*T, k, M=M, which='SM')
 
 vecs = np.real(vecs)
@@ -74,8 +97,13 @@ vals = np.real(vals)
 fig, axs = plt.subplots(2, 3, figsize=(20, 10))
 for i in range(0,2):
     for j in range(0,3):
+        
+        for inode in range(0, Nn):
+            if node_id[inode] == 1:
+                Ez[inode] = vecs[un_index[inode], i+j+1]
+
         axs[i][j].triplot(triang)
-        cax = axs[i][j].tripcolor(triang, vecs[:, i+j+1], cmap='plasma', shading='flat')
+        cax = axs[i][j].tripcolor(triang, Ez, cmap='plasma', shading='flat')
         fig.colorbar(cax, ax=axs[i][j])
 
 plt.show()
