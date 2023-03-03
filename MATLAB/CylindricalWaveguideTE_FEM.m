@@ -57,9 +57,9 @@ fc = zeros(5, 1);
 for i = 2:6
     fc(i-1) = c0*sqrt(D(i,i))/(2*pi);
 
-    figure(i-1);
+    subplot(2, 3, i-1);
     pdeplot(p, e, t, 'xydata', V(:,i));
-    title('fc = ', fc(i-1));
+    title('Hz with fc = ', fc(i-1));
     axis tight;
     axis equal;
     hold on;

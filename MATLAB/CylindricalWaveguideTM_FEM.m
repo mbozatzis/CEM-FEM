@@ -100,9 +100,9 @@ for i = 2:6
         end
     end
 
-    figure(i-1);
+    subplot(2, 3, i-1);
     pdeplot(p, e, t, 'xydata', Ez);
-    title('fc = ', fc(i-1));
+    title('Ez with fc = ', fc(i-1));
     axis tight;
     axis equal;
     hold on;
