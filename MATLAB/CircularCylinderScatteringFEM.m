@@ -2,13 +2,14 @@ clear
 clc
 
 lambda = 1;
-f = 300*10^6;
+f = 3;
 k = (2*pi)/lambda;
 a = lambda/4;
 R = a + lambda/2;
 E0 = 1;
 
 alpha = -(1/(2*R) + 1i*k);
+omega = ((2*pi*f)^2);
 
 % Geometry Description
 gd = [1 1; 0 0; 0 0; R a];
@@ -17,6 +18,8 @@ dl = decsg(gd, 'R1-R2', ns);
 
 % Create Mesh
 [p, e, t] = initmesh(dl);
+[p, e, t] = refinemesh(dl, p, e, t);
+[p, e, t] = refinemesh(dl, p, e, t);
 [p, e, t] = refinemesh(dl, p, e, t);
 Num_nodes = size(p, 2);
 Num_elements = size(t, 2);
@@ -37,16 +40,16 @@ for ie = 1:Num_edges
 
     if (region1 == 0 || region2 == 0)
         
-        if (radius(1) < R/2)
+        if (radius(1) < R/2) && (x(1) < 0)
             Ez(nodes(1)) = E0;
             node_id(nodes(1)) = 0;
-        else 
+        elseif (radius(1) > R/2)
             node_id(nodes(1)) = 2;
         end
-        if (radius(2) < R/2)
+        if (radius(2) < R/2) && (x(2) < 0)
             Ez(nodes(1)) = E0;
             node_id(nodes(1)) = 0;
-        else
+        elseif (radius(2) > R/2)
             node_id(nodes(1)) = 2;
         end
     end
@@ -97,9 +100,9 @@ for ie = 1:Num_elements
             if(node_id(nodes(i)) == 1)
                 if(node_id(nodes(j)) == 1)
                     Sff(index(nodes(i)), index(nodes(j))) = Sff(index(nodes(i)), index(nodes(j))) + Se(i, j);
-                    Tff(index(nodes(i)), index(nodes(j))) = Tff(index(nodes(i)), index(nodes(j))) - ((2*pi*f)^2)*Te(i, j);
+                    Tff(index(nodes(i)), index(nodes(j))) = Tff(index(nodes(i)), index(nodes(j))) - omega*Te(i, j);
                 elseif(node_id(nodes(j)) == 0)
-                    B(index(nodes(i))) = B(index(nodes(i))) - (Se(i, j) - ((2*pi*f)^2)*Te(i, j))*Ez(nodes(j));
+                    B(index(nodes(i))) = B(index(nodes(i))) - (Se(i, j) - omega*Te(i, j))*Ez(nodes(j));
                 end
             end
             if(node_id(nodes(i)) == 2) 
