@@ -5,3 +5,4 @@ Using Finite Element Method (FEM) on solving Electromagnetism problems. Some of 
 - Electric Potential of a Parallel Plate Capacitor ($w = 4cm$, $t = 2mm$, $d = 1$ and $\epsilon_r = 2.2$)
 - Magnetic Field ($H_z$) of TE modes in a Cylindrical Waveguide ($2a = 2cm$)
 - Electric Field ($E_z$) of TM modes in a Cylindrical Waveguide ($2a = 2cm$)
+- Electric Field ($E_z$) of a plane wave Scattered from Circular conductive Cylinder ($f = 300MHz$, $2a = \lambda/2$)
