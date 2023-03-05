@@ -4,7 +4,7 @@ clc
 lambda = 1;
 f = 300*10^6;
 k = (2*pi)/lambda;
-a = lambda/4;
+a = lambda/8;
 R = a + lambda/2;
 E0 = 1;
 m0 = 1.256637061*10^(-6);
@@ -43,19 +43,15 @@ for ie = 1:Num_edges
     if (region1 == 0 || region2 == 0)
         
         if (radius(1) < R/2) 
-            if (x(1) < 0)
-                Ez(nodes(1)) = E0*exp(-1i*2*pi*p(1,nodes(1)));
-                node_id(nodes(1)) = 0;
-            end
-        elseif (radius(1) > R/2)
+            Ez(nodes(1)) = -E0*exp(-1i*2*pi*p(1,nodes(1)));
+            node_id(nodes(1)) = 0;
+        else
             node_id(nodes(1)) = 2;
         end
         if (radius(2) < R/2) 
-            if (x(2) < 0)
-                Ez(nodes(2)) = E0*exp(-1i*2*pi*p(1,nodes(2)));
-                node_id(nodes(2)) = 0;
-            end
-        elseif (radius(2) > R/2)
+            Ez(nodes(2)) = -E0*exp(-1i*2*pi*p(1,nodes(2)));
+            node_id(nodes(2)) = 0;
+        else
             node_id(nodes(2)) = 2;
         end
     end
@@ -116,6 +112,8 @@ for ie = 1:Num_elements
                     Sff(index(nodes(i)), index(nodes(j))) = Sff(index(nodes(i)), index(nodes(j))) + Se(i, j);
                     Tff(index(nodes(i)), index(nodes(j))) = Tff(index(nodes(i)), index(nodes(j))) - omega*Te(i, j);
                 elseif(node_id(nodes(j)) == 2)
+                    Sff(index(nodes(i)), index(nodes(j))) = Sff(index(nodes(i)), index(nodes(j))) + Se(i, j);
+                    Tff(index(nodes(i)), index(nodes(j))) = Tff(index(nodes(i)), index(nodes(j))) - omega*Te(i, j);
                     Tffc(index(nodes(i)), index(nodes(j))) = Tffc(index(nodes(i)), index(nodes(j))) + (1/(m0*e0))*alpha*Te(i,j);
                 end
             end
