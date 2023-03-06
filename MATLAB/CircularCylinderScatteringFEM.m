@@ -4,13 +4,13 @@ clc
 lambda = 1;
 f = 300*10^6;
 k = (2*pi)/lambda;
-a = lambda/8;
+a = lambda/4;
 R = a + lambda/2;
 E0 = 1;
 m0 = 1.256637061*10^(-6);
 e0 = 8.854187817* 10^(-12);  
 
-alpha = -(1/(2*R) + 1i*k);
+alpha = (1/(2*R) + 1i*k);
 omega = ((2*pi*f)^2);
 
 % Geometry Description
@@ -26,7 +26,6 @@ dl = decsg(gd, 'R1-R2', ns);
 Num_nodes = size(p, 2);
 Num_elements = size(t, 2);
 
-pdeplot(p, e, t);
 
 % Define known and unknown fields
 node_id = ones(Num_nodes, 1);
@@ -43,13 +42,13 @@ for ie = 1:Num_edges
     if (region1 == 0 || region2 == 0)
         
         if (radius(1) < R/2) 
-            Ez(nodes(1)) = -E0*exp(-1i*2*pi*p(1,nodes(1)));
+            Ez(nodes(1)) = -E0*exp(-1i*k*x(1));
             node_id(nodes(1)) = 0;
         else
             node_id(nodes(1)) = 2;
         end
         if (radius(2) < R/2) 
-            Ez(nodes(2)) = -E0*exp(-1i*2*pi*p(1,nodes(2)));
+            Ez(nodes(2)) = -E0*exp(-1i*k*x(2));
             node_id(nodes(2)) = 0;
         else
             node_id(nodes(2)) = 2;
@@ -94,27 +93,36 @@ for ie = 1:Num_elements
         for j = 1:3
             Se(i, j) = (1/m0)*(b(i)*b(j) + c(i)*c(j))*Ae;
             if i == j
-                Te(i, j) = e0*Ae/6;
+                Te(i, j) = omega*e0*Ae/6;
             else
-                Te(i, j) = e0*Ae/12;
+                Te(i, j) = omega*e0*Ae/12;
             end
 
             if(node_id(nodes(i)) == 1)
                 if(node_id(nodes(j)) ~= 0)
                     Sff(index(nodes(i)), index(nodes(j))) = Sff(index(nodes(i)), index(nodes(j))) + Se(i, j);
-                    Tff(index(nodes(i)), index(nodes(j))) = Tff(index(nodes(i)), index(nodes(j))) - omega*Te(i, j);
+                    Tff(index(nodes(i)), index(nodes(j))) = Tff(index(nodes(i)), index(nodes(j))) - Te(i, j);
                 else
-                    B(index(nodes(i))) = B(index(nodes(i))) - (Se(i, j) - omega*Te(i, j))*Ez(nodes(j));
+                    B(index(nodes(i))) = B(index(nodes(i))) - (Se(i, j) - Te(i, j))*Ez(nodes(j));
                 end
             end
             if(node_id(nodes(i)) == 2)
                 if(node_id(nodes(j)) == 1)
                     Sff(index(nodes(i)), index(nodes(j))) = Sff(index(nodes(i)), index(nodes(j))) + Se(i, j);
-                    Tff(index(nodes(i)), index(nodes(j))) = Tff(index(nodes(i)), index(nodes(j))) - omega*Te(i, j);
+                    Tff(index(nodes(i)), index(nodes(j))) = Tff(index(nodes(i)), index(nodes(j))) - Te(i, j);
                 elseif(node_id(nodes(j)) == 2)
                     Sff(index(nodes(i)), index(nodes(j))) = Sff(index(nodes(i)), index(nodes(j))) + Se(i, j);
-                    Tff(index(nodes(i)), index(nodes(j))) = Tff(index(nodes(i)), index(nodes(j))) - omega*Te(i, j);
-                    Tffc(index(nodes(i)), index(nodes(j))) = Tffc(index(nodes(i)), index(nodes(j))) + (1/(m0*e0))*alpha*Te(i,j);
+                    Tff(index(nodes(i)), index(nodes(j))) = Tff(index(nodes(i)), index(nodes(j))) - Te(i, j);
+
+                    M1 = [(x(i) + x(j))/2, (y(i) + y(j))/2];
+                    M2 = [(x(j) + x(mod(j,3)+1))/2, (y(j) + y(mod(j,3)+1))/2];
+                    AP = [x(mod(j,3)+1) - x(i), y(mod(j,3)+1) - y(i)];   
+                    BP = [x(mod(i,3)+1) - x(j), y(mod(i,3)+1) - y(j)];
+                    Si = norm(cross([M1 0],[AP 0])) / 2;
+                    Sj = norm(cross([M2 0],[BP 0])) / 2; 
+                    Tec(i, j) = (1/2)*(alpha/m0)*(2*Si + Sj);
+
+                    Tffc(index(nodes(i)), index(nodes(j))) = Tffc(index(nodes(i)), index(nodes(j))) + Tec(i,j);
                 end
             end
         end
