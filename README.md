@@ -36,3 +36,17 @@ $$\iint_{\Omega}\nabla\phi'\epsilon\nabla\phi ds = \iint_{\Omega}\phi'\rho ds$$
 
 After that, we can switch the above equation to its discrete form (Discrete Galerkin Formulation):
 $$\sum_{n=1}^{N_e}\iint_{\Omega_n}\nabla\phi'\epsilon\nabla\phi ds = \sum_{n=1}^{N_e}\iint_{\Omega_n}\phi'\rho ds$$
+
+For each element, we have: $$\phi = \sum_{i=1}^{3}\phi_iN_i$$
+and the local integral: $$W_n = \iint_{\Omega_n}\nabla\phi'\epsilon\nabla\phi ds = \iint_{\Omega_n}(\sum_{i=1}^{3}\phi_i'\nabla N_i)\epsilon(\sum_{j=1}^{3}\phi_j\nabla N_j) ds = \sum_{i=1}^{3}\sum_{j=1}^{3}\phi_i'S_{ij}\phi_j$$
+
+Where, $S_{ij} = \iint_{\Omega_n}\nabla N_i\epsilon\nabla N_j ds = \epsilon_n(b_ib_j + c_ic_j)A_n$ is the Local Stiffness Matric.
+
+In our case, we don't have charge distributions in the space, so $\iint_{\Omega}\phi'\rho ds = 0$
+
+Now, the only thing remaining is the assembly.
+
+We seperate the nodes in groups of known and unknown potentials. For the unknowns, we create the Stifness Matrix $S_{ff}$ from the assembly of the corresponding Local Stiffness Matrices. For the known values, we create a vector $B$ that is the product of the assembly of the rest of the Local Stiffness Matrices and the known potentials.
+
+Finally, the unknown potentials can be calculated from the linear system:
+$$S_{ff}F_{f} = B$$
