@@ -7,6 +7,17 @@ Using Finite Element Method (FEM) on solving Electromagnetism problems. Some of 
 - Electric Field ($E_z$) of TM modes in a Cylindrical Waveguide ($2a = 2cm$)
 - Electric Field ($E_z$) of a plane wave Scattered from Circular conductive Cylinder ($f = 300MHz$, $2a = \lambda/2$)
 
+## Results
+
+- Cylindrical Capacitor Potential:
+
+![CCFEM](https://user-images.githubusercontent.com/61554467/224555540-1a3f26e4-e05d-4422-a211-3ae9c06cf1da.png)
+
+- Parallel Plate Capacitor Potential:
+
+![PPCFEM](https://user-images.githubusercontent.com/61554467/224555669-2e73d908-f883-447c-81bb-7255cabb625d.png)
+
+
 ## Theoretical Analysis
 
 In our problems we will use base functions to describe the quantities we want to calculate. So, their description will be in the form:
