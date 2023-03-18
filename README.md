@@ -17,6 +17,14 @@ Using Finite Element Method (FEM) on solving Electromagnetism problems. Some of 
 
 ![PPCFEM](https://user-images.githubusercontent.com/61554467/224555669-2e73d908-f883-447c-81bb-7255cabb625d.png)
 
+- Cylindrical Waveguide Magnetic Field ($H_z$) of TE modes:
+
+![CWTEFEM](https://user-images.githubusercontent.com/61554467/226121915-342f4330-1c1e-4630-948e-9a1110dcb2e4.png)
+
+- Cylindrical Waveguide Electric Field ($E_z$) of TM modes:
+
+![CWTMFEM](https://user-images.githubusercontent.com/61554467/226121952-9fa77ea2-9e80-4953-a643-1e097bd2d1e3.png)
+
 
 ## Theoretical Analysis
 
