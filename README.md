@@ -73,3 +73,33 @@ We seperate the nodes in groups of known and unknown potentials. For the unknown
 
 Finally, the unknown potentials can be calculated from the linear system:
 $$S_{ff}F_{f} = B$$
+
+### Eigenvalue Problem
+
+- For TM modes:
+
+The eigenvalue problem for wave guiding has the form:
+
+$$(\nabla^2+k^2)E = 0$$
+
+With the Galerkin formulation:
+
+$$\iint_{\Omega}E_z'[(\nabla^2+k^2)Ε]ds = 0 => \iint_{\Omega}\nabla E_z'\cdot\nabla E_zds - k_c^2\iint_{\Omega}E_z'\cdot E_zds - \oint_{\partial \Omega}E_z'\frac{\partial E_z}{\partial n}dl = 0$$
+
+
+Also, we have Dirichlet Homogeneous condition at the boundary, so $\oint_{\partial \Omega}E_z'\frac{\partial E_z}{\partial n}dl = 0$, so we end up with the problem:
+
+$$\iint_{\Omega}\nabla E_z'\cdot\nabla E_zds - k_c^2\iint_{\Omega}E_z'\cdot E_zds = 0 => (S - k_c^2T)E = 0$$
+
+where the matrix S is the stiffness matrix and can be calculated in the same way with the Electrostatic Problem and T is the Mass Matrix that can be calculated by the relation:
+
+$$T = \iint_{\Omega}N_pN_pds$$
+
+We can find the Total Mass Matrix by assebling the local Mass Matrices $T_{ij}$. These matrices have elements with values $A_n/6$ if $i=j$ and $A_n/12$ if $i\neq j$. So, we end up wanting to solve the matrix eigenvalue problem $(S - k_c^2T)E = 0$
+
+- For TE modes:
+
+We end up in the same equation with the same procedure, but this time for the magnetic field: $H_z$ 
+$$(S - k_c^2T)H = 0$$ 
+However, it is worth noting that this time the circumflex term $\oint_{\partial \Omega}H_z'\frac{\partial H_z}{\partial n}dl$ is eliminated by the Neumann Homogeneous condition $\frac{\partial H_z}{\partial n} = 0$
+
