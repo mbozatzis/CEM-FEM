@@ -59,7 +59,6 @@ for i = 2:6
 
     subplot(2, 3, i-1);
     pdeplot(p, e, t, 'xydata', V(:,i));
-    title('Hz with fc = ', fc(i-1));
     axis tight;
     axis equal;
     hold on;

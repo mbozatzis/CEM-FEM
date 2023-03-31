@@ -13,8 +13,11 @@ dl = decsg(gd, 'R1-R2', ns);
 % Create Mesh
 [p, e, t] = initmesh(dl);
 [p, e, t] = refinemesh(dl, p, e, t);
+[p, e, t] = refinemesh(dl, p, e, t);
+[p, e, t] = refinemesh(dl, p, e, t);
 Num_nodes = size(p, 2);
 Num_elements = size(t, 2);
+
 
 % Define known and unknown potentials
 node_id = ones(Num_nodes, 1);
